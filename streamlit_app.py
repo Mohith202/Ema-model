@@ -16,7 +16,7 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
 
-
+Thougther_API=st.secrets["API_KEY"]
 
 # Page title
 st.set_page_config(page_title='ML Model Building', page_icon='🤖')
@@ -82,7 +82,7 @@ llm = Together(
     max_tokens=256,
     temperature=0,
     top_k=1,
-    together_api_key="df1dc6d23e5f86fb725daf5138500ce8d092d33f512873bc3df397f6b4019a"  
+    together_api_key=Thougther_API  
 )
 
 retriever = db.as_retriever(similarity_score_threshold=0.9)
