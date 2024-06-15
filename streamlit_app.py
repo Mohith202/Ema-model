@@ -79,7 +79,7 @@ db = Chroma.from_documents(new_pages, embedding_function)
 
 llm = Together(
     model="meta-llama/Llama-2-70b-chat-hf",
-    max_tokens=256,
+    max_tokens=512,
     temperature=0,
     top_k=1,
     together_api_key=Thougther_API  
