@@ -1,4 +1,6 @@
 import os
+import tempfile
+import PyPDF2
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -42,21 +44,31 @@ with st.sidebar:
     
     
 def load_pdfs_from_file(uploaded_file):
+    print(uploaded_file)
     if uploaded_file is not None:
-        print(uploaded_file.read())
-        file_bytes = uploaded_file.read()
-        # You can write it to a temporary file if needed
-        with open(uploaded_file.name, "wb") as f:
-            f.write(file_bytes)
-        loader = PyPDFLoader(uploaded_file.name)
+        file_path = os.path.join(folder_path, uploaded_file)
+        loader = PyPDFLoader(file_path)
+        # loader = PyPDFLoader(uploaded_file)
         # loader = PyPDFLoader(uploaded_file)
         documents = loader.load()
         return documents
     return []
+
+def save_uploaded_file(uploaded_file, directory):
+    # Ensure the directory exists
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Save the file
+    file_path = os.path.join(directory, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return file_path
       
 
 def load_pdfs_from_folder(folder_path):
     documents = []
+    print(os.listdir(folder_path))
     for filename in os.listdir(folder_path):
         if filename.endswith(".pdf"):
             file_path = os.path.join(folder_path, filename)
@@ -73,11 +85,6 @@ def split_docs(documents, chunk_size=500, chunk_overlap=10):
     docs = text_splitter.split_documents(documents)
     return docs
 
-if  uploaded_file is None :
-    folder_path = "./dataset"  
-    documents = load_pdfs_from_folder(folder_path)
-else:    
-    documents = load_pdfs_from_file(uploaded_file)
 
 def initialize_model(documents):
     with st.spinner("Generating may take few secounds"):
@@ -149,8 +156,18 @@ def add_query_response(query, response):
 
 if name:
     query = name
+    print(uploaded_file)
     if uploaded_file:
-        documents = load_pdfs_from_file(uploaded_file)
+         dataset_directory = "dataset"
+         file_path = save_uploaded_file(uploaded_file, dataset_directory)
+        #  with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+        #     temp_file.write(uploaded_file.read())
+        #     temp_file_path = temp_file.name
+            # with open(temp_file_path, "rb") as file:
+            #      pdf_data = file.read()
+            # uploaded_file = os.path.join("/tmp", uploaded_file.name) if uploaded_file else None
+            # documents = load_pdfs_from_file(temp_file_path)
+         documents = load_pdfs_from_file(file_path)
     else:
         folder_path = "./dataset"
         documents = load_pdfs_from_folder(folder_path)
