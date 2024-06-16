@@ -1,6 +1,5 @@
 import os
 import tempfile
-import PyPDF2
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -46,6 +45,7 @@ with st.sidebar:
 def load_pdfs_from_file(uploaded_file):
     print(uploaded_file)
     if uploaded_file is not None:
+        folder_path="./dataset"
         file_path = os.path.join(folder_path, uploaded_file)
         loader = PyPDFLoader(file_path)
         # loader = PyPDFLoader(uploaded_file)
@@ -142,12 +142,11 @@ class ConversationalAgent:
         return result, response['source_documents']
 
 print("hello")
-name = st.text_input("Enter your name")
+name = st.text_input("Enter your query")
 
 if 'query_responses' not in st.session_state:
     st.session_state['query_responses'] = []
 
-# Function to add query and response to session state
 def add_query_response(query, response):
     st.session_state.query_responses.append({'query': query, 'response': response})
 
@@ -160,13 +159,6 @@ if name:
     if uploaded_file:
          dataset_directory = "dataset"
          file_path = save_uploaded_file(uploaded_file, dataset_directory)
-        #  with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-        #     temp_file.write(uploaded_file.read())
-        #     temp_file_path = temp_file.name
-            # with open(temp_file_path, "rb") as file:
-            #      pdf_data = file.read()
-            # uploaded_file = os.path.join("/tmp", uploaded_file.name) if uploaded_file else None
-            # documents = load_pdfs_from_file(temp_file_path)
          documents = load_pdfs_from_file(file_path)
     else:
         folder_path = "./dataset"
@@ -208,36 +200,4 @@ else:
 
 
 
-
-
-# title=""
-# page=""
-# content=""
-# Source=""
-
-# # Example interaction
-# query = name
-# if query:
-#     response, sources = agent.ask(query)
-#     # response = chain(query)
-#     print(response)
-
-# # Displaying the sources
-
-#     for doc in sources:
-#     # title = doc.metadata['title']
-#         page = doc.metadata['page']
-#         snippet = doc.page_content[:200]
-#         Source={doc.metadata['source']}
-#         Content= {doc.page_content[:20]}
-# else:
-#     st.write("Enter query.")
-# if page:
-#     st.write(response)
-#     st.write("data taken from source:",Source," and page No: ",page )
-# if content:
-#     st.write("Taken content from :",content)
-# # def main():
-# #     # Text input
-# #     name = st.text_input("Enter your name")
 
