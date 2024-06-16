@@ -45,10 +45,10 @@ with st.sidebar:
 def load_pdfs_from_file(uploaded_file):
     print(uploaded_file)
     if uploaded_file is not None:
-        folder_path="./dataset"
-        file_path = os.path.join(folder_path, uploaded_file)
-        loader = PyPDFLoader(file_path)
-        # loader = PyPDFLoader(uploaded_file)
+        # folder_path="./dataset"
+        # file_path = os.path.join(folder_path, uploaded_file)
+        # loader = PyPDFLoader(file_path)
+        loader = PyPDFLoader(uploaded_file)
         # loader = PyPDFLoader(uploaded_file)
         documents = loader.load()
         return documents
