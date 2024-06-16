@@ -95,7 +95,7 @@ def initialize_model(documents):
         db = Chroma.from_documents(new_pages, embedding_function)
 
         llm = Together(
-        model="meta-llama/Llama-2-70b-chat-hf",
+        model="meta-llama/Llama-3-70b-chat-hf",
         max_tokens=512,
         temperature=0,
         top_k=1,
