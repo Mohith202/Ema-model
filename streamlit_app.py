@@ -2,9 +2,6 @@ import os
 import streamlit as st
 import pandas as pd
 import numpy as np
-# from sklearn.model_selection import train_test_split
-# from sklearn.ensemble import RandomForestRegressor
-# from sklearn.metrics import mean_squared_error, r2_score
 import altair as alt
 import time
 from langchain_community.document_loaders import PyPDFLoader
@@ -14,7 +11,11 @@ from langchain_community.vectorstores import Chroma
 from langchain_together import Together
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import chromadb
+import chromadb.config
 
 Thougther_API=st.secrets["API_KEY"]
 
@@ -24,10 +25,10 @@ st.title('🤖 ML Model Building')
 
 with st.expander('About this app'):
   st.markdown('**What can this app do?**')
-  st.info('This app allow users to build a machine learning (ML) model in an end-to-end workflow. Particularly, this encompasses data upload and get a Query response.')
+  st.info('This app allow users to upload a PDF file about a topic and get a Query response from together LLM.')
 
   st.markdown('**How to use the app?**')
-  st.warning('To engage with the app, go to the sidebar and upload a PDF. As a result, this would initiate the ML model building process, display the model results as well as allowing users to download the generated models and accompanying data.')
+  st.warning('To engage with the app, go to the sidebar and upload a PDF.Send a Query and get your answer. ')
 
 st.write("It make take few seconds to load. ")
 # Sidebar for accepting input parameters
