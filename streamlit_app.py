@@ -137,9 +137,15 @@ class ConversationalAgent:
 print("hello")
 name = st.text_input("Enter your name")
 
+if 'query_responses' not in st.session_state:
+    st.session_state['query_responses'] = []
+
+# Function to add query and response to session state
+def add_query_response(query, response):
+    st.session_state.query_responses.append({'query': query, 'response': response})
+
+
 # agent = ConversationalAgent(chain)
-
-
 
 if name:
     query = name
@@ -154,6 +160,7 @@ if name:
         agent = ConversationalAgent(chain)
         response, sources = agent.ask(query)
         print(response)
+        add_query_response(query, response)
 
         # Displaying the sources
         for doc in sources:
@@ -172,8 +179,14 @@ if name:
 else:
     st.write("Enter query.")
 
+st.header('Previous Queries and Responses')
 
-
+if st.session_state.query_responses:
+    for i, qr in enumerate(st.session_state.query_responses, 1):
+        st.write(f"{i}. Query: {qr['query']}")
+        st.write(f"   Response: {qr['response']}")
+else:
+    st.write("No queries yet.")
 
 
 
