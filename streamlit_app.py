@@ -31,7 +31,7 @@ with st.expander('About this app'):
   st.markdown('**How to use the app?**')
   st.warning('To engage with the app, go to the sidebar and upload a PDF.Send a Query and get your answer. ')
 
-st.write("It make take few seconds to load. ")
+st.write("It make take few minutes to genertae query response. ")
 # Sidebar for accepting input parameters
 with st.sidebar:
     # Load data
