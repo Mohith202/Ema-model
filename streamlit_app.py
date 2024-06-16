@@ -18,12 +18,12 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import chromadb
 import chromadb.config
 
-Thougther_API=st.secrets["API_KEY"]
+Together_API=st.secrets["API_KEY"]
 
 # Page title
 st.set_page_config(page_title='ML Model Building', page_icon='🤖')
 st.title('🤖 ML Model Building')
-
+uploaded=None
 with st.expander('About this app'):
   st.markdown('**What can this app do?**')
   st.info('This app allow users to upload a PDF file about a topic and get a Query response from together LLM.')
@@ -99,7 +99,7 @@ def initialize_model(documents):
         max_tokens=512,
         temperature=0,
         top_k=1,
-        together_api_key=Thougther_API  
+        together_api_key=Together_API  
         )
 
         retriever = db.as_retriever(similarity_score_threshold=0.9)
