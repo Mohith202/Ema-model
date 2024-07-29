@@ -176,7 +176,7 @@ if name:
             page = doc.metadata['page']
             snippet = doc.page_content[:200]
             Source = {doc.metadata['source']}
-            Content = {doc.page_content[:50]}
+            Content = {doc.page_content}
         
         if page:
             st.write(response)
