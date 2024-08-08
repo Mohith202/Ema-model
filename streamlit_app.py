@@ -42,7 +42,7 @@ def add_query_response(query, response):
 
 def summarize_text(text):
     summarizer = pipeline("summarization")
-    summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+    summary = summarizer(text, max_length=200, min_length=30, do_sample=False)
     return summary[0]['summary_text']
 
 name = st.text_input("Enter your query")
