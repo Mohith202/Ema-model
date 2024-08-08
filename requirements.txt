@@ -14,3 +14,6 @@ tomlkit==0.12.0
 pypdf
 sentence-transformers
 chromadb
+moviepy
+SpeechRecognition
+transformers

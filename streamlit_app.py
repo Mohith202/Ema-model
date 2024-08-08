@@ -1,7 +1,11 @@
 import streamlit as st
 import os
-from utility import load_pdfs_from_file, load_pdfs_from_folder, save_uploaded_file
-from agent import initialize_model, ConversationalAgent
+from para_utility import load_pdfs_from_file, load_pdfs_from_folder, save_uploaded_file
+from para_agent import initialize_model, ConversationalAgent
+import speech_recognition as sr
+from transformers import pipeline
+from video_utility import save_uploaded_video, process_video_voice  # Importing from video_utility
+
 # __import__('pysqlite3')
 # import sys
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -9,7 +13,10 @@ from agent import initialize_model, ConversationalAgent
 # Page title
 st.set_page_config(page_title='Ema Chatbot', page_icon='🤖')
 st.title('🤖 ML Chatbot')
+
 uploaded=None
+video_file=None
+
 with st.expander('About this app'):
   st.markdown('**What can this app do?**')
   st.info('This app allows users to upload a PDF file about a topic and get a Query response from Together LLM.')
@@ -24,11 +31,19 @@ with st.sidebar:
     st.markdown('**1. Use custom data**')
     uploaded_file = st.file_uploader("Upload a pdf file", type=["pdf"])
 
+    st.header('1.2. Upload Video')
+    uploaded_video_file = st.file_uploader("Upload a video file", type=["mp4", "avi", "mov"])
+
 if 'query_responses' not in st.session_state:
     st.session_state['query_responses'] = []
 
 def add_query_response(query, response):
     st.session_state.query_responses.append({'query': query, 'response': response})
+
+def summarize_text(text):
+    summarizer = pipeline("summarization")
+    summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+    return summary[0]['summary_text']
 
 name = st.text_input("Enter your query")
 
@@ -65,6 +80,15 @@ if name:
 else:
     st.write("Enter query.")
 
+if uploaded_video_file:
+    # Save the uploaded video file to a temporary location
+    video_file_path = save_uploaded_video(uploaded_video_file)
+    
+    # Process the video to extract voice and summarize
+    voice_text = process_video_voice(video_file_path)
+    summary = summarize_text(voice_text)
+    st.write("Voice Summary:", summary)
+
 st.header('Previous Queries and Responses')
 
 if st.session_state.query_responses:
@@ -73,8 +97,3 @@ if st.session_state.query_responses:
         st.write(f"   Response: {qr['response']}")
 else:
     st.write("No queries yet.")
-
-
-
-
-
