@@ -86,7 +86,10 @@ if uploaded_video_file:
     
     # Process the video to extract voice and summarize
     voice_text = process_video_voice(video_file_path)
+    st.write("Voice Data:", voice_text)
+    st.markdown(f"**Voice Data:** <span style='font-size: 20px;'>{voice_text}</span>", unsafe_allow_html=True)
     summary = summarize_text(voice_text)
+    st.write("Voice Summary:", summary)
     st.write("Voice Summary:", summary)
 
 st.header('Previous Queries and Responses')
