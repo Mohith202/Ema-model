@@ -10,6 +10,8 @@ from video_utility import save_uploaded_video, process_video_voice  # Importing 
 # import sys
 # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
+import sqlite3
+
 # Page title
 st.set_page_config(page_title='Ema Chatbot', page_icon='🤖')
 st.title('🤖 ML Chatbot')
@@ -86,11 +88,11 @@ if uploaded_video_file:
     
     # Process the video to extract voice and summarize
     voice_text = process_video_voice(video_file_path)
-    st.write("Voice Data:", voice_text)
+    # st.write("Voice Data:", voice_text)
     st.markdown(f"**Voice Data:** <span style='font-size: 20px;'>{voice_text}</span>", unsafe_allow_html=True)
     summary = summarize_text(voice_text)
-    st.write("Voice Summary:", summary)
-    st.write("Voice Summary:", summary)
+    # st.write("Voice Summary:", summary)
+    st.markdown(f"**Voice Summary:** <span style='font-size: 20px;'>{summary}</span>", unsafe_allow_html=True)
 
 st.header('Previous Queries and Responses')
 
