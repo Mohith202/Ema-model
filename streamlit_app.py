@@ -6,9 +6,9 @@ import speech_recognition as sr
 from transformers import pipeline
 from video_utility import save_uploaded_video, process_video_voice  # Importing from video_utility
 
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import sqlite3
 
