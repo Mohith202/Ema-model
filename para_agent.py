@@ -11,7 +11,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 # import chromadb
 # import chromadb.config
 
-Together_API = "df1dc6d23e5f86fb725daf5138500ce8d092d33f512873bc3df39507f6b4019a"
+Together_API = st.secrets["Together_API"]
 
 def split_docs(documents, chunk_size=500, chunk_overlap=10):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
