@@ -2,13 +2,13 @@ import streamlit as st
 import os
 from para_utility import load_pdfs_from_file, load_pdfs_from_folder, save_uploaded_file
 from para_agent import initialize_model, ConversationalAgent
-import speech_recognition as sr
-from transformers import pipeline
-from video_utility import save_uploaded_video, process_video_voice  # Importing from video_utility
+from whisper import load_model  # Importing Whisper AI
+from transformers import pipeline  # Ensure transformers is updated
+from video_utility import save_uploaded_video, process_video_voice
 
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import sqlite3
 
@@ -82,17 +82,21 @@ if name:
 else:
     st.write("Enter query.")
 
+
 if uploaded_video_file:
     # Save the uploaded video file to a temporary location
-    video_file_path = save_uploaded_video(uploaded_video_file)
-    
-    # Process the video to extract voice and summarize
-    voice_text = process_video_voice(video_file_path)
-    # st.write("Voice Data:", voice_text)
-    st.markdown(f"**Voice Data:** <span style='font-size: 20px;'>{voice_text}</span>", unsafe_allow_html=True)
-    summary = summarize_text(voice_text)
-    # st.write("Voice Summary:", summary)
-    st.markdown(f"**Voice Summary:** <span style='font-size: 20px;'>{summary}</span>", unsafe_allow_html=True)
+    try:
+        video_file_path = save_uploaded_video(uploaded_video_file)
+        
+        # Process the video to extract voice and summarize
+        voice_text = process_video_voice(video_file_path)
+        # st.write("Voice Data:", voice_text)
+        st.markdown(f"**Voice Data:** <span style='font-size: 20px;'>{voice_text}</span>", unsafe_allow_html=True)
+        summary = summarize_text(voice_text)
+        # st.write("Voice Summary:", summary)
+        st.markdown(f"**Voice Summary:** <span style='font-size: 20px;'>{summary}</span>", unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 st.header('Previous Queries and Responses')
 
