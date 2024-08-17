@@ -1,5 +1,5 @@
 import os
-# import spacy
+import streamlit as st
 from langchain_community.document_loaders import PyPDFLoader
 import uuid  # For generating unique identifiers
 
@@ -7,6 +7,7 @@ import uuid  # For generating unique identifiers
 def load_pdfs_from_file(file_path):
     loader = PyPDFLoader(file_path)
     documents = loader.load()
+    st.write(documents[0].metadata["source"],"Documents in file path")
     return documents
 
 def save_uploaded_file(uploaded_file, directory):
@@ -16,6 +17,7 @@ def save_uploaded_file(uploaded_file, directory):
     file_path = os.path.join(directory, uploaded_file.name)
     with open(file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
+    st.write(file_path,"path")
     return file_path
 
 

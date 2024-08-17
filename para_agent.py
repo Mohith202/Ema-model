@@ -20,8 +20,12 @@ def split_docs(documents, chunk_size=500, chunk_overlap=10):
 
 def initialize_model(documents):
     with st.spinner("Generating may take a few seconds"):
+        # st.write(documents,"Model is generating")
         new_pages = split_docs(documents)
         embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+        if not new_pages:  # Check if new_pages is empty
+            st.error("No documents to process.")
+            return None
         db = Chroma.from_documents(new_pages, embedding_function)
 
         llm = Together(
@@ -62,7 +66,7 @@ class ConversationalAgent:
         prompt_template = """
         CONTEXT: {context}
         QUESTION: {question}"""
-        prompt = f"[INST] CONTEXT: {context} {prompt_template} [/INST]"
+        prompt = f"[INST] CONTEXT: {context} QUESTION: {query} {prompt_template} [/INST]"
         response = self.chain(query)
         result = response['result']
         self.history.append({'query': query, 'response': result})

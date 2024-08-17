@@ -17,7 +17,7 @@ st.set_page_config(page_title='Ema Chatbot', page_icon='🤖')
 st.title('🤖 ML Chatbot')
 
 uploaded=None
-video_file=None
+uploaded_video_file=None
 
 with st.expander('About this app'):
   st.markdown('**What can this app do?**')
@@ -33,6 +33,11 @@ with st.sidebar:
     st.markdown('**1. Use custom data**')
     uploaded_file = st.file_uploader("Upload a pdf file", type=["pdf"])
 
+    # Use session state to control the checkbox state
+    if 'generate_questions' not in st.session_state:
+        st.session_state['generate_questions'] = False
+
+    generate_questions_checkbox = st.checkbox("Generate 5 questions from the content", value=st.session_state['generate_questions'])
     st.header('1.2. Upload Video')
     uploaded_video_file = st.file_uploader("Upload a video file", type=["mp4", "avi", "mov"])
 
@@ -47,10 +52,43 @@ def summarize_text(text):
     summary = summarizer(text, max_length=200, min_length=30, do_sample=False)
     return summary[0]['summary_text']
 
-name = st.text_input("Enter your query")
+query = st.text_input("Enter your query")
 
-if name:
-    query = name
+# Reset the checkbox after the operation
+if uploaded_file and generate_questions_checkbox:
+    query = f"Generate 5 flashcard questions based Context: {query}"
+    st.write(query)
+    if uploaded_file:
+        dataset_directory = "dataset"
+        file_path = save_uploaded_file(uploaded_file, dataset_directory)
+        documents = load_pdfs_from_file(file_path)
+    if documents:
+        chain = initialize_model(documents)
+        agent = ConversationalAgent(chain)
+        response, Source = agent.ask(query)
+        add_query_response(query, response)
+
+        # Uncheck the checkbox after processing
+        st.session_state['generate_questions'] = False
+
+        # Displaying the sources
+        for doc in Source:
+            page = doc.metadata['page']
+            snippet = doc.page_content[:200]
+            Source = {doc.metadata['source']}
+            Content = {doc.page_content[:50]}
+        
+        if page:
+            st.write(response)
+            st.write("Data taken from source:", Source, " and page No: ", page)
+        if Content:
+            st.write("Taken content from:", Content)
+        query = ""
+    else:
+        st.write("No documents found.")
+
+
+if query  and not uploaded_video_file:
     if uploaded_file:
          dataset_directory = "dataset"
          file_path = save_uploaded_file(uploaded_file, dataset_directory)
@@ -58,7 +96,7 @@ if name:
     else:
         folder_path = "./dataset"
         documents = load_pdfs_from_folder(folder_path)
-    
+        print(documents)
     if documents:
         chain = initialize_model(documents)
         agent = ConversationalAgent(chain)
